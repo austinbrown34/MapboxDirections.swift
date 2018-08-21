@@ -252,7 +252,7 @@ open class Directions: NSObject {
 
         let routeService = RouteService.init(mapData: osrmPath)
         routeService?.overview = .full
-        routeService?.geometries = .geoJSON
+        routeService?.geometries = .polyline
         routeService?.steps = true
         let jsonResult = routeService?.getRoutesFrom(start, to: end)
 //        print(jsonResult)
