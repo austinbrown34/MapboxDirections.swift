@@ -363,7 +363,16 @@ open class Directions: NSObject {
                     route.routeIdentifier = json["uuid"] as? String
                 }
             }
-            completionHandler(response.0, response.1, nil)
+            if osrmPath == nil{
+                completionHandler(response.0, response.1, nil)
+            }
+            else{
+                let start = options.waypoints[0].coordinate
+                let end = options.waypoints[1].coordinate
+                let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!)
+                completionHandler(options.waypoints, jsonResult["routes"] as? [Route], nil)
+            }
+//            completionHandler(response.0, response.1, nil)
         }) { (error) in
 //
 
@@ -374,7 +383,7 @@ open class Directions: NSObject {
                 let start = options.waypoints[0].coordinate
                 let end = options.waypoints[1].coordinate
                 let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!)
-                completionHandler(options.waypoints, jsonResult["routes"] as? [Route], error)
+                completionHandler(options.waypoints, jsonResult["routes"] as? [Route], nil)
             }
 //            let xmlpath
 //            let documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
