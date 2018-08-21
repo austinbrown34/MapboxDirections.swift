@@ -252,9 +252,16 @@ open class Directions: NSObject {
      }
      */
 //    @objc (getJSON:start)
+    @discardableResult open func getWaypoints(location: CLLocationCoordinate2D, osrmPath: String) -> Dictionary<String, Any>{
+        let nearestService = NearestService.init(mapData: osrmPath)
+        let jsonResult = nearestService?.getWaypointsFrom(location)
+        return jsonResult!
+    }
+    
     @discardableResult open func getJSON(_ start: CLLocationCoordinate2D, end: CLLocationCoordinate2D, osrmPath: String) -> Dictionary<String, Any> {
 
         let routeService = RouteService.init(mapData: osrmPath)
+        
         routeService?.overview = .full
         routeService?.geometries = .polyline
         routeService?.steps = true
@@ -371,6 +378,8 @@ open class Directions: NSObject {
         globalOSRMPath = osrmPath
         globalOptions = options
         let url = self.url(forCalculating: options)
+        print("calculateDirections:")
+        print(url)
         let task = dataTask(with: url, completionHandler: { (json) in
             let response = options.response(from: json)
             if let routes = response.1 {
@@ -425,6 +434,8 @@ open class Directions: NSObject {
     @objc(calculateMatchesWithOptions:completionHandler:)
     @discardableResult open func calculate(_ options: MatchOptions, completionHandler: @escaping MatchCompletionHandler) -> URLSessionDataTask {
         let url = self.url(forCalculating: options)
+        print("calculateMatches:")
+        print(url)
         let data = options.encodedParam.data(using: .utf8)
         let task = dataTask(with: url, data: data, completionHandler: { (json) in
             let response = options.response(from: json)
@@ -435,7 +446,8 @@ open class Directions: NSObject {
                     match.routeIdentifier = json["uuid"] as? String
                 }
             }
-            completionHandler(response, nil)
+//            let location = options.waypoints
+//            completionHandler(response, nil)
         }) { (error) in
             completionHandler(nil, error)
         }
@@ -446,6 +458,8 @@ open class Directions: NSObject {
     @objc(calculateRoutesMatchingOptions:completionHandler:)
     @discardableResult open func calculateRoutes(matching options: MatchOptions, completionHandler: @escaping RouteCompletionHandler) -> URLSessionDataTask {
         let url = self.url(forCalculating: options)
+        print("calculateRoutes:")
+        print(url)
         let data = options.encodedParam.data(using: .utf8)
         let task = dataTask(with: url, data: data, completionHandler: { (json) in
             let response = options.response(containingRoutesFrom: json)
