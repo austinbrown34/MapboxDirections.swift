@@ -255,6 +255,7 @@ open class Directions: NSObject {
         routeService?.geometries = .geoJSON
         routeService?.steps = true
         let jsonResult = routeService?.getRoutesFrom(start, to: end)
+        print(jsonResult)
         var newroutes = [Dictionary<String, Any>]()
 //        let jsonData = try JSONSerialization.jsonObject(with: jsonResult, options: [])
 //        do {
