@@ -301,7 +301,7 @@ open class Directions: NSObject {
                 }
                 var newleg = leg
                 newleg["steps"] = newsteps
-                newlegs.append(leg)
+                newlegs.append(newleg)
             }
             route["legs"] = newlegs
             newroutes.append(route)
