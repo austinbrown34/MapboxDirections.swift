@@ -1,0 +1,6 @@
+framework module OSRM {
+  umbrella header "OSRM.h"
+
+  export *
+  module * { export * }
+}

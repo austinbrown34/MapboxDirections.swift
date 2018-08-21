@@ -6,7 +6,7 @@ import Foundation
 @objc(MBVisualInstruction)
 open class VisualInstruction: NSObject, NSSecureCoding {
     
-    public static var supportsSecureCoding = true
+    open static var supportsSecureCoding = true
     
     /**
      A plain text representation of the instruction.

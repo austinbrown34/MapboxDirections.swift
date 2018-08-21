@@ -66,7 +66,7 @@ open class SpokenInstruction: NSObject, NSSecureCoding {
         ssmlText = decoder.decodeObject(of: NSString.self, forKey: "ssmlText")! as String
     }
     
-    public static var supportsSecureCoding = true
+    open static var supportsSecureCoding = true
     
     public func encode(with coder: NSCoder) {
         coder.encode(distanceAlongStep, forKey: "distanceAlongStep")

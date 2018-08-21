@@ -1,5 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import <OSRM/OSRM.h>
+#import <OSRM/OSRMService.h>
 
 //! Project version number for MapboxDirections.
 FOUNDATION_EXPORT double MapboxDirectionsVersionNumber;

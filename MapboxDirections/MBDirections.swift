@@ -1,3 +1,4 @@
+
 typealias JSONDictionary = [String: Any]
 
 /// Indicates that an error occurred in MapboxDirections.
@@ -121,7 +122,7 @@ open class Directions: NSObject {
      To use this object, a Mapbox [access token](https://www.mapbox.com/help/define-access-token/) should be specified in the `MGLMapboxAccessToken` key in the main application bundle’s Info.plist.
      */
     @objc(sharedDirections)
-    public static let shared = Directions(accessToken: nil)
+    open static let shared = Directions(accessToken: nil)
     
     /// The API endpoint to request the directions from.
     internal var apiEndpoint: URL
@@ -161,6 +162,185 @@ open class Directions: NSObject {
     // MARK: Getting Directions
     
     /**
+     - (void)getJSON:(CLLocationCoordinate2D *)start end:(CLLocationCoordinate2D *)end xmlpath:(NSString *)xmlpath{
+     
+     NSString* sourcePath = [[NSBundle mainBundle] pathForResource:@"billings2" ofType:@"xml"];
+     //    NSString* sourcePath = [[NSBundle mainBundle] pathForResource:@"billings2" inDirectory:@"billings" ofType:@"xml"];
+     
+     
+     //    NSString *documentDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+     
+     //    NSString *documentPath = [NSString stringWithFormat:@"%@/%@%s", documentDir, xmlpath, ".osrm"];
+     NSString *documentPath = [NSString stringWithFormat:@"%@%s", sourcePath, ".osrm"];
+     
+     //    NSLog(@"PATH: %@", sourcePath);
+     
+     RouteService *routeService = [[RouteService alloc] initWithMapData: documentPath];
+     
+     routeService.overview = ORSMOverviewFull;
+     
+     routeService.geometries = ORSMGeometryGeoJSON;
+     routeService.steps = true;
+     NSDictionary<NSString *, NSObject *> *jsonResult;
+     
+     
+     jsonResult = [routeService getRoutesFrom:*start to:*end];
+     NSLog(@"%@", jsonResult);
+     
+     NSMutableArray *newroutes = [[NSMutableArray alloc] init];
+     for (NSObject *route in [jsonResult valueForKeyPath:@"routes"]) {
+     [route setValue:@"en-US" forKey:@"voiceLocale"];
+     NSMutableArray *newlegs = [[NSMutableArray alloc] init];
+     for (NSObject *leg in [route valueForKey:@"legs"]){
+     //            [routeMessage appendFormat:@"Route via %@:\n\n", leg];
+     //            [self setCurrentMessage: routeMessage];
+     //            NSLengthFormatter *distanceFormatter = [[NSLengthFormatter alloc] init];
+     //            NSString *formattedDistance = [distanceFormatter stringFromMeters: leg.distance];
+     
+     //            NSDateComponentsFormatter *travelTimeFormatter = [[NSDateComponentsFormatter alloc] init];
+     
+     //            travelTimeFormatter.unitsStyle = NSDateComponentsFormatterUnitsStyleShort;
+     //            NSString *formattedTravelTime = [travelTimeFormatter stringFromTimeInterval: route.expectedTravelTime];
+     //            NSLog(@"Distance: %@; ETA: %@", formattedDistance, formattedTravelTime);
+     
+     //            [routeMessage appendFormat:@"Distance: %@; ETA: %@\n\n", formattedDistance, formattedTravelTime];
+     NSMutableArray *newsteps = [[NSMutableArray alloc] init];
+     for (NSObject *step in [leg valueForKey:@"steps"]){
+     NSMutableArray *voiceInstructions = [[NSMutableArray alloc] init];
+     NSMutableDictionary *voiceObject = [[NSMutableDictionary alloc] init];
+     
+     OSRMInstructionFormatter *osrminstructionFormatter = [[OSRMInstructionFormatter alloc] initWithVersion:@"v5"];
+     //                [distanceFormatter setUnitStyle:NSFormattingUnitStyleMedium];
+     //                NSLog(@"%@", [osrminstructionFormatter stringForObjectValue:step]);
+     //                [routeMessage appendFormat: @"%@\n\n", [osrminstructionFormatter stringForObjectValue:step]];
+     //                NSString *formattedDistance = [distanceFormatter stringFromMeters:step.distance];
+     //                NSLog(@"— %@ —", formattedDistance);
+     //                [routeMessage appendFormat:@"— %@ —\n\n", formattedDistance];
+     //            NSNumber *dis = [distanceFormatter doub]
+     //                [step va]
+     double distance = [[step valueForKey:@"distance"] doubleValue];
+     NSNumber *dis = [[NSNumber alloc] initWithDouble:distance];
+     NSMutableString *msg = [[NSMutableString alloc] init];
+     [msg appendString:@"<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">"];
+     //                MBRouteStep *this_step = step;
+     MBRouteStep *this_step = [[MBRouteStep alloc] initWithJson:step];
+     [msg appendString:[osrminstructionFormatter stringForObjectValue:this_step]];
+     [msg appendString:@"</prosody></amazon:effect></speak>"];
+     //                            NSString *msg = [NSString stringWithFormat:@"%s/%@/%s", "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">", [osrminstructionFormatter stringForObjectValue:step], "</prosody></amazon:effect></speak>"];
+     [voiceObject setObject:dis forKey:@"distanceAlongGeometry"];
+     [voiceObject setObject:[osrminstructionFormatter stringForObjectValue:this_step] forKey:@"announcement"];
+     [voiceObject setObject:msg forKey:@"ssmlAnnouncement"];
+     [voiceInstructions addObject:voiceObject];
+     [step setValue:voiceInstructions forKey:@"voiceInstructions"];
+     //                [step setObject:voiceInstructions forKey:@"voiceInstructions"];
+     [newsteps addObject:step];
+     }
+     [leg setValue:newsteps forKeyPath:@"steps" ];
+     [newlegs addObject:leg];
+     
+     
+     }
+     [route setValue:newlegs forKeyPath:@"legs"];
+     [newroutes addObject:route];
+     }
+     
+     
+     }
+     */
+//    @objc (getJSON:start)
+    @discardableResult open func getJSON(_ start: CLLocationCoordinate2D, end: CLLocationCoordinate2D, osrmPath: String) -> Dictionary<String, Any> {
+        
+        let routeService = RouteService.init(mapData: osrmPath)
+        routeService?.overview = .full
+        routeService?.geometries = .geoJSON
+        routeService?.steps = true
+        let jsonResult = routeService?.getRoutesFrom(start, to: end)
+        var newroutes = [Dictionary<String, Any>]()
+//        let jsonData = try JSONSerialization.jsonObject(with: jsonResult, options: [])
+//        do {
+//            let jsonData = try JSONSerialization.data(withJSONObject: jsonResult ?? {}, options: .prettyPrinted)
+//
+//        }catch{
+//            print(error.localizedDescription)
+//        }
+//        let newjsonResult = jsonResult as Dictionary
+//        let routes = jsonResult.valueForKeyPath("routes")
+        
+        for r in jsonResult!["routes"] as! [Dictionary<String, Any>]{
+            var route = r
+            route["voiceLocal"] = "en-US"
+            var newlegs = [Dictionary<String, Any>]()
+            for leg in route["legs"] as! [Dictionary<String, Any>]{
+                var newsteps = [Dictionary<String, Any>]()
+                for step in leg["steps"] as! [Dictionary<String, Any>]{
+                    var voiceInstructions = [Dictionary<String, Any>]()
+                    var voiceObject = Dictionary<String, Any>()
+                    //                    let osrminstructionFormatter = OSRMInstructionFormatter.ini
+                    let dis = step["distance"]
+                    let maneuver = step["maneuver"] as! Dictionary<String, Any>
+                    let instruction = maneuver["instruction"] as! String
+                    let msg = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">" + instruction + "</prosody></amazon:effect></speak>"
+                    voiceObject["distanceAlongGeometry"] = dis
+                    voiceObject["announcement"] = instruction
+                    voiceObject["ssmlAnnouncement"] = msg
+                    voiceInstructions.append(voiceObject)
+                    var newstep = step
+                    newstep["voiceInstructions"] = voiceInstructions
+                    newsteps.append(newstep)
+                    
+                }
+                var newleg = leg
+                newleg["steps"] = newsteps
+                newlegs.append(leg)
+            }
+            route["legs"] = newlegs
+            newroutes.append(route)
+        }
+        var newjsonResult = jsonResult
+        newjsonResult!["routes"] = newroutes as NSObject
+//        jsonResult["routes"] = newroutes
+        
+//        NSMutableArray *newroutes = [[NSMutableArray alloc] init];
+//        for (NSObject *route in [jsonResult valueForKeyPath:@"routes"]) {
+//            [route setValue:@"en-US" forKey:@"voiceLocale"];
+//            NSMutableArray *newlegs = [[NSMutableArray alloc] init];
+//            for (NSObject *leg in [route valueForKey:@"legs"]){
+//
+//                NSMutableArray *newsteps = [[NSMutableArray alloc] init];
+//                for (NSObject *step in [leg valueForKey:@"steps"]){
+//                    NSMutableArray *voiceInstructions = [[NSMutableArray alloc] init];
+//                    NSMutableDictionary *voiceObject = [[NSMutableDictionary alloc] init];
+//
+//                    OSRMInstructionFormatter *osrminstructionFormatter = [[OSRMInstructionFormatter alloc] initWithVersion:@"v5"];
+//
+//                    double distance = [[step valueForKey:@"distance"] doubleValue];
+//                    NSNumber *dis = [[NSNumber alloc] initWithDouble:distance];
+//                    NSMutableString *msg = [[NSMutableString alloc] init];
+//                    [msg appendString:@"<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">"];
+//
+//                    MBRouteStep *this_step = [[MBRouteStep alloc] initWithJson:step];
+//                    [msg appendString:[osrminstructionFormatter stringForObjectValue:this_step]];
+//                    [msg appendString:@"</prosody></amazon:effect></speak>"];
+//
+//                    [voiceObject setObject:dis forKey:@"distanceAlongGeometry"];
+//                    [voiceObject setObject:[osrminstructionFormatter stringForObjectValue:this_step] forKey:@"announcement"];
+//                    [voiceObject setObject:msg forKey:@"ssmlAnnouncement"];
+//                    [voiceInstructions addObject:voiceObject];
+//                    [step setValue:voiceInstructions forKey:@"voiceInstructions"];
+//
+//                    [newsteps addObject:step];
+//                }
+//                [leg setValue:newsteps forKeyPath:@"steps" ];
+//                [newlegs addObject:leg];
+//
+//
+//            }
+//            [route setValue:newlegs forKeyPath:@"legs"];
+//            [newroutes addObject:route];
+//        }
+        return newjsonResult!
+    }
+    /**
      Begins asynchronously calculating the route or routes using the given options and delivers the results to a closure.
      
      This method retrieves the routes asynchronously over a network connection. If a connection error or server error occurs, details about the error are passed into the given completion handler in lieu of the routes.
@@ -171,8 +351,8 @@ open class Directions: NSObject {
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      - returns: The data task used to perform the HTTP request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel this task.
      */
-    @objc(calculateDirectionsWithOptions:completionHandler:)
-    @discardableResult open func calculate(_ options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) -> URLSessionDataTask {
+    @objc(calculateDirectionsWithOptions:completionHandler:osrmPath:)
+    @discardableResult open func calculate(_ options: RouteOptions, osrmPath: String? = nil, completionHandler: @escaping RouteCompletionHandler) -> URLSessionDataTask {
         let url = self.url(forCalculating: options)
         let task = dataTask(with: url, completionHandler: { (json) in
             let response = options.response(from: json)
@@ -185,7 +365,21 @@ open class Directions: NSObject {
             }
             completionHandler(response.0, response.1, nil)
         }) { (error) in
-            completionHandler(nil, nil, error)
+//
+            
+            if osrmPath == nil{
+                completionHandler(nil, nil, error)
+            }
+            else{
+                let start = options.waypoints[0].coordinate
+                let end = options.waypoints[1].coordinate
+                let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!)
+                completionHandler(options.waypoints, jsonResult["routes"] as? [Route], error)
+            }
+//            let xmlpath
+//            let documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+//            let osrmPath = documentsDir + xmlpath + ".osrm"
+            
         }
         task.resume()
         return task
