@@ -1,7 +1,10 @@
 import Foundation
 
 // Will automatically read localized Instructions.plist
-let OSRMTextInstructionsStrings = NSDictionary(contentsOfFile: Bundle(for: OSRMInstructionFormatter.self).path(forResource: "Instructions", ofType: "plist")!)!
+//NSString* sourcePath = [[NSBundle mainBundle] pathForResource:@"billings2" ofType:@"xml"];
+//let OSRMTextInstructionsStrings = NSDictionary(contentsOfFile: Bundle(for: OSRMInstructionFormatter.self).path(forResource: "Instructions", ofType: "plist")!)!
+
+let OSRMTextInstructionsStrings = NSDictionary(contentsOfFile: Bundle.main.path(forResource: "Instructions", ofType: "plist")!)
 
 protocol Tokenized {
     associatedtype T
@@ -52,7 +55,7 @@ extension String: Tokenized {
         result = result.replacingOccurrences(of: "\\s\\s", with: " ", options: .regularExpression)
         
         // capitalize
-        let meta = OSRMTextInstructionsStrings["meta"] as! [String: Any]
+        let meta = OSRMTextInstructionsStrings!["meta"] as! [String: Any]
         if meta["capitalizeFirstLetter"] as? Bool ?? false {
             result = result.sentenceCased
         }
@@ -94,7 +97,7 @@ extension NSAttributedString: Tokenized {
         result.mutableString.replaceOccurrences(of: "\\s\\s", with: " ", options: .regularExpression, range: wholeRange)
         
         // capitalize
-        let meta = OSRMTextInstructionsStrings["meta"] as! [String: Any]
+        let meta = OSRMTextInstructionsStrings!["meta"] as! [String: Any]
         if meta["capitalizeFirstLetter"] as? Bool ?? false {
             result.replaceCharacters(in: NSRange(location: 0, length: 1), with: String(result.string.first!).uppercased())
         }
@@ -117,7 +120,7 @@ extension NSAttributedString: Tokenized {
     
     @objc public init(version: String) {
         self.version = version
-        self.instructions = OSRMTextInstructionsStrings[version] as! [String: Any]
+        self.instructions = OSRMTextInstructionsStrings![version] as! [String: Any]
         
         super.init()
     }

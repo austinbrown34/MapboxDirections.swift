@@ -218,6 +218,8 @@
 		E9DAC466212C508800B84D78 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DAC463212C508700B84D78 /* TokenType.swift */; };
 		E9DAC467212C508800B84D78 /* OSRMTextInstructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DAC464212C508700B84D78 /* OSRMTextInstructions.swift */; };
 		E9DAC468212C508800B84D78 /* PhraseName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DAC465212C508800B84D78 /* PhraseName.swift */; };
+		E9DAC9B1212C5B8B00B84D78 /* json2plist.sh in Resources */ = {isa = PBXBuildFile; fileRef = E9DAC9B0212C5B8B00B84D78 /* json2plist.sh */; };
+		E9DAC9B4212C601A00B84D78 /* Instructions.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9DAC9B3212C601A00B84D78 /* Instructions.plist */; };
 		F448F8311DDCC65C000BC343 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F448F82A1DDCC5B6000BC343 /* Polyline.framework */; };
 		F448F8341DDCC6C1000BC343 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F448F82A1DDCC5B6000BC343 /* Polyline.framework */; };
 		F448F83D1DDCC6FA000BC343 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F448F83A1DDCC6EB000BC343 /* Polyline.framework */; };
@@ -367,6 +369,8 @@
 		E9DAC463212C508700B84D78 /* TokenType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenType.swift; sourceTree = "<group>"; };
 		E9DAC464212C508700B84D78 /* OSRMTextInstructions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSRMTextInstructions.swift; sourceTree = "<group>"; };
 		E9DAC465212C508800B84D78 /* PhraseName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhraseName.swift; sourceTree = "<group>"; };
+		E9DAC9B0212C5B8B00B84D78 /* json2plist.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = json2plist.sh; path = "Carthage/Checkouts/osrm-text-instructions.swift/json2plist.sh"; sourceTree = "<group>"; };
+		E9DAC9B3212C601A00B84D78 /* Instructions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Instructions.plist; sourceTree = SOURCE_ROOT; };
 		F448F82A1DDCC5B6000BC343 /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
 		F448F8381DDCC6D7000BC343 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
 		F448F8391DDCC6EB000BC343 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/Mac/OHHTTPStubs.framework; sourceTree = "<group>"; };
@@ -558,6 +562,7 @@
 				C59094BE203B800300EB2417 /* MBDirectionsOptions.swift */,
 				DA2E03E81CB0E0B000D1269A /* MBRouteStep.swift */,
 				C57D55001DB5669600B94B74 /* MBIntersection.swift */,
+				E9DAC9B3212C601A00B84D78 /* Instructions.plist */,
 				C57D55071DB58C0200B94B74 /* MBLane.swift */,
 				C57B2E951DB8171300E9123A /* MBLaneIndication.h */,
 				DAA76D671DD127CB0015EC78 /* MBLaneIndication.swift */,
@@ -685,6 +690,7 @@
 		DD6254451AE70C1700017857 = {
 			isa = PBXGroup;
 			children = (
+				E9DAC9B0212C5B8B00B84D78 /* json2plist.sh */,
 				DADD27B61E5AAAD800D31FAD /* Directions Example */,
 				DA6C9D891CAE442B00094FBC /* MapboxDirections */,
 				DA6C9D971CAE442B00094FBC /* MapboxDirectionsTests */,
@@ -1089,6 +1095,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9DAC9B4212C601A00B84D78 /* Instructions.plist in Resources */,
+				E9DAC9B1212C5B8B00B84D78 /* json2plist.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
