@@ -408,7 +408,8 @@ extension NSAttributedString: Tokenized {
             exitOrdinal = ordinalFormatter.string(from: exitIndex as NSNumber)!
         }
         let modifierConstants = constants["modifier"] as! [String: String]
-        let modifierConstant = modifierConstants[modifier ?? "straight"]!
+        let modifierConstant = modifierConstants[modifier == "none" ? "straight" : modifier]!
+//        let modifierConstant = modifierConstants[modifier ?? "straight"]!
         var bearing: Int? = nil
         if step.finalHeading != nil { bearing = Int(step.finalHeading! as Double) }
 
