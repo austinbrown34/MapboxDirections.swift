@@ -381,7 +381,9 @@ open class Directions: NSObject {
                 let start = options.waypoints[0].coordinate
                 let end = options.waypoints[1].coordinate
                 let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!, options: options)
-                completionHandler(options.waypoints, jsonResult["routes"] as? [Route], nil)
+//                NSArray<MBRoute *> * _Nullable routes = [jsonResult valueForKeyPath:@"routes"];
+                let routes = jsonResult["routes"] as! [Route]
+                completionHandler(options.waypoints, routes, nil)
             }
 //            completionHandler(response.0, response.1, nil)
         }) { (error) in
@@ -394,7 +396,8 @@ open class Directions: NSObject {
                 let start = options.waypoints[0].coordinate
                 let end = options.waypoints[1].coordinate
                 let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!, options:options)
-                completionHandler(options.waypoints, jsonResult["routes"] as? [Route], nil)
+                let routes = jsonResult["routes"] as! [Route]
+                completionHandler(options.waypoints, routes, nil)
             }
 //            let xmlpath
 //            let documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
