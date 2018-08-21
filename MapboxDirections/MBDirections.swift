@@ -248,7 +248,7 @@ open class Directions: NSObject {
      }
      */
 //    @objc (getJSON:start)
-    @discardableResult open func getJSON(_ start: CLLocationCoordinate2D, end: CLLocationCoordinate2D, osrmPath: String) -> Dictionary<String, Any> {
+    @discardableResult open func getJSON(_ start: CLLocationCoordinate2D, end: CLLocationCoordinate2D, osrmPath: String, options: RouteOptions) -> Dictionary<String, Any> {
 
         let routeService = RouteService.init(mapData: osrmPath)
         routeService?.overview = .full
@@ -279,15 +279,17 @@ open class Directions: NSObject {
                     //                    let osrminstructionFormatter = OSRMInstructionFormatter.ini
                     let dis = step["distance"]
 //                    OSRMInstructionFormatter *osrminstructionFormatter = [[OSRMInstructionFormatter alloc] initWithVersion:@"v5"];
-                    let osrminstructionFormatter = OSRMInstructionFormatter(initWithVersion: "v5")
+                    let osrminstructionFormatter = OSRMInstructionFormatter.init(version: "v5")
+//                    let osrminstructionFormatter = OSRMInstructionFormatter(initWithVersion: "v5")
 //                    MBRouteStep *this_step = [[MBRouteStep alloc] initWithJson:step];
 //                    [msg appendString:[osrminstructionFormatter stringForObjectValue:this_step]];
-                    let this_step = MBRouteStep(initWithJson: step)
-                    let instruction = osrminstructionFormatter(stringForObjectValue:this_step)
-                
+//                    let this_step = MBRouteStep.init(json: step, options: nil)
+                    let this_step = RouteStep.init(json: step, options: options)
+//                    let instruction = osrminstructionFormatter(stringForObjectValue:this_step)
+                    let instruction = osrminstructionFormatter.string(for: this_step)
 //                    let maneuver = step["maneuver"] as! Dictionary<String, Any>
 //                    let instruction = maneuver["instruction"] as! String
-                    let msg = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">" + instruction + "</prosody></amazon:effect></speak>"
+                    let msg = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">" + instruction! + "</prosody></amazon:effect></speak>"
                     voiceObject["distanceAlongGeometry"] = dis
                     voiceObject["announcement"] = instruction
                     voiceObject["ssmlAnnouncement"] = msg
@@ -377,7 +379,7 @@ open class Directions: NSObject {
             else{
                 let start = options.waypoints[0].coordinate
                 let end = options.waypoints[1].coordinate
-                let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!)
+                let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!, options: options)
                 completionHandler(options.waypoints, jsonResult["routes"] as? [Route], nil)
             }
 //            completionHandler(response.0, response.1, nil)
@@ -390,7 +392,7 @@ open class Directions: NSObject {
             else{
                 let start = options.waypoints[0].coordinate
                 let end = options.waypoints[1].coordinate
-                let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!)
+                let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!, options:options)
                 completionHandler(options.waypoints, jsonResult["routes"] as? [Route], nil)
             }
 //            let xmlpath

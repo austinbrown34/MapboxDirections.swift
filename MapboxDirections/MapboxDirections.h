@@ -2,7 +2,6 @@
 #import <CoreLocation/CoreLocation.h>
 #import <OSRM/OSRM.h>
 #import <OSRM/OSRMService.h>
-@import OSRMTextInstructions;
 
 //! Project version number for MapboxDirections.
 FOUNDATION_EXPORT double MapboxDirectionsVersionNumber;
@@ -14,3 +13,4 @@ FOUNDATION_EXPORT const unsigned char MapboxDirectionsVersionString[];
 #import "MBAttribute.h"
 #import "MBRouteOptions.h"
 #import "MBRoadClasses.h"
+

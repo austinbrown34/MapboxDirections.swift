@@ -215,7 +215,9 @@
 		DAE9E0F51EB7DE2E001E8E8B /* RouteOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE9E0F31EB7DE2E001E8E8B /* RouteOptionsTests.swift */; };
 		DAE9E0F61EB7DE2E001E8E8B /* RouteOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE9E0F31EB7DE2E001E8E8B /* RouteOptionsTests.swift */; };
 		E9DAC45D212BE55C00B84D78 /* OSRM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DAC45C212BE55B00B84D78 /* OSRM.framework */; };
-		E9DAC462212C4B0900B84D78 /* OSRMTextInstructions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DAC461212C4B0900B84D78 /* OSRMTextInstructions.framework */; };
+		E9DAC466212C508800B84D78 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DAC463212C508700B84D78 /* TokenType.swift */; };
+		E9DAC467212C508800B84D78 /* OSRMTextInstructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DAC464212C508700B84D78 /* OSRMTextInstructions.swift */; };
+		E9DAC468212C508800B84D78 /* PhraseName.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DAC465212C508800B84D78 /* PhraseName.swift */; };
 		F448F8311DDCC65C000BC343 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F448F82A1DDCC5B6000BC343 /* Polyline.framework */; };
 		F448F8341DDCC6C1000BC343 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F448F82A1DDCC5B6000BC343 /* Polyline.framework */; };
 		F448F83D1DDCC6FA000BC343 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F448F83A1DDCC6EB000BC343 /* Polyline.framework */; };
@@ -362,6 +364,9 @@
 		DD6254731AE70CB700017857 /* MBDirections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MBDirections.swift; sourceTree = "<group>"; };
 		E9DAC45C212BE55B00B84D78 /* OSRM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSRM.framework; path = Frameworks/OSRM.framework; sourceTree = "<group>"; };
 		E9DAC461212C4B0900B84D78 /* OSRMTextInstructions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSRMTextInstructions.framework; path = Carthage/Build/iOS/OSRMTextInstructions.framework; sourceTree = "<group>"; };
+		E9DAC463212C508700B84D78 /* TokenType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenType.swift; sourceTree = "<group>"; };
+		E9DAC464212C508700B84D78 /* OSRMTextInstructions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSRMTextInstructions.swift; sourceTree = "<group>"; };
+		E9DAC465212C508800B84D78 /* PhraseName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhraseName.swift; sourceTree = "<group>"; };
 		F448F82A1DDCC5B6000BC343 /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
 		F448F8381DDCC6D7000BC343 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
 		F448F8391DDCC6EB000BC343 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/Mac/OHHTTPStubs.framework; sourceTree = "<group>"; };
@@ -401,7 +406,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9DAC462212C4B0900B84D78 /* OSRMTextInstructions.framework in Frameworks */,
 				E9DAC45D212BE55C00B84D78 /* OSRM.framework in Frameworks */,
 				F448F8341DDCC6C1000BC343 /* Polyline.framework in Frameworks */,
 			);
@@ -538,6 +542,9 @@
 		DA6C9D891CAE442B00094FBC /* MapboxDirections */ = {
 			isa = PBXGroup;
 			children = (
+				E9DAC464212C508700B84D78 /* OSRMTextInstructions.swift */,
+				E9DAC465212C508800B84D78 /* PhraseName.swift */,
+				E9DAC463212C508700B84D78 /* TokenType.swift */,
 				8D381B681FDB1009008D5A58 /* Extensions */,
 				C5DAAC9E20191683001F9261 /* Match */,
 				DA6C9D8A1CAE442B00094FBC /* MapboxDirections.h */,
@@ -1304,11 +1311,14 @@
 				DA2E03EB1CB0E13D00D1269A /* MBRouteOptions.swift in Sources */,
 				C582BA2E2073ED6300647DAA /* Array.swift in Sources */,
 				C52552B91FA15D5900B1545C /* MBVisualInstructionBanner.swift in Sources */,
+				E9DAC467212C508800B84D78 /* OSRMTextInstructions.swift in Sources */,
 				C52552C01FA1628A00B1545C /* MBVisualInstructionComponent.swift in Sources */,
 				C59426071F1EA6C400C8E59C /* MBRoadClasses.swift in Sources */,
 				358D48861E2EAB4500F32A65 /* MBRouteOptions.m in Sources */,
 				35EFD00B207DFACA00BF3873 /* MBVisualInstruction.swift in Sources */,
 				DAC05F161CFBFAC400FA0071 /* MBWaypoint.swift in Sources */,
+				E9DAC466212C508800B84D78 /* TokenType.swift in Sources */,
+				E9DAC468212C508800B84D78 /* PhraseName.swift in Sources */,
 				C57D55081DB58C0200B94B74 /* MBLane.swift in Sources */,
 				DAC05F181CFC075300FA0071 /* MBRoute.swift in Sources */,
 				C59094BF203B800300EB2417 /* MBDirectionsOptions.swift in Sources */,
