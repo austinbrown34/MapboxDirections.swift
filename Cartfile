@@ -1,1 +1,2 @@
 github "raphaelmor/Polyline" ~> 4.2
+github "Project-OSRM/osrm-text-instructions.swift"

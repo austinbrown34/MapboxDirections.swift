@@ -278,8 +278,15 @@ open class Directions: NSObject {
                     var voiceObject = Dictionary<String, Any>()
                     //                    let osrminstructionFormatter = OSRMInstructionFormatter.ini
                     let dis = step["distance"]
-                    let maneuver = step["maneuver"] as! Dictionary<String, Any>
-                    let instruction = maneuver["instruction"] as! String
+//                    OSRMInstructionFormatter *osrminstructionFormatter = [[OSRMInstructionFormatter alloc] initWithVersion:@"v5"];
+                    let osrminstructionFormatter = OSRMInstructionFormatter(initWithVersion: "v5")
+//                    MBRouteStep *this_step = [[MBRouteStep alloc] initWithJson:step];
+//                    [msg appendString:[osrminstructionFormatter stringForObjectValue:this_step]];
+                    let this_step = MBRouteStep(initWithJson: step)
+                    let instruction = osrminstructionFormatter(stringForObjectValue:this_step)
+                
+//                    let maneuver = step["maneuver"] as! Dictionary<String, Any>
+//                    let instruction = maneuver["instruction"] as! String
                     let msg = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">" + instruction + "</prosody></amazon:effect></speak>"
                     voiceObject["distanceAlongGeometry"] = dis
                     voiceObject["announcement"] = instruction
