@@ -7,6 +7,10 @@ public let MBDirectionsErrorDomain = "MBDirectionsErrorDomain"
 /// The Mapbox access token specified in the main application bundle’s Info.plist.
 let defaultAccessToken = Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAccessToken") as? String
 
+var globalOSRMPath: String?
+var globalOptions: RouteOptions?
+
+
 /// The user agent string for any HTTP requests performed directly within this library.
 let userAgent: String = {
     var components: [String] = []
@@ -248,7 +252,7 @@ open class Directions: NSObject {
      }
      */
 //    @objc (getJSON:start)
-    @discardableResult open func getJSON(_ start: CLLocationCoordinate2D, end: CLLocationCoordinate2D, osrmPath: String, options: RouteOptions) -> Dictionary<String, Any> {
+    @discardableResult open func getJSON(_ start: CLLocationCoordinate2D, end: CLLocationCoordinate2D, osrmPath: String) -> Dictionary<String, Any> {
 
         let routeService = RouteService.init(mapData: osrmPath)
         routeService?.overview = .full
@@ -284,7 +288,7 @@ open class Directions: NSObject {
 //                    MBRouteStep *this_step = [[MBRouteStep alloc] initWithJson:step];
 //                    [msg appendString:[osrminstructionFormatter stringForObjectValue:this_step]];
 //                    let this_step = MBRouteStep.init(json: step, options: nil)
-                    let this_step = RouteStep.init(json: step, options: options)
+                    let this_step = RouteStep.init(json: step, options: globalOptions!)
 //                    let instruction = osrminstructionFormatter(stringForObjectValue:this_step)
                     let instruction = osrminstructionFormatter.string(for: this_step)
 //                    let maneuver = step["maneuver"] as! Dictionary<String, Any>
@@ -364,6 +368,8 @@ open class Directions: NSObject {
      */
     @objc(calculateDirectionsWithOptions:osrmPath:completionHandler:)
     @discardableResult open func calculate(_ options: RouteOptions, osrmPath: String? = nil, completionHandler: @escaping RouteCompletionHandler) -> URLSessionDataTask {
+        globalOSRMPath = osrmPath
+        globalOptions = options
         let url = self.url(forCalculating: options)
         let task = dataTask(with: url, completionHandler: { (json) in
             let response = options.response(from: json)
@@ -374,13 +380,13 @@ open class Directions: NSObject {
                     route.routeIdentifier = json["uuid"] as? String
                 }
             }
-            if osrmPath == nil{
+            if globalOSRMPath == nil{
                 completionHandler(response.0, response.1, nil)
             }
             else{
                 let start = options.waypoints[0].coordinate
                 let end = options.waypoints[1].coordinate
-                let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!, options: options)
+                let jsonResult = self.getJSON(start, end: end, osrmPath: globalOSRMPath!)
 //                NSArray<MBRoute *> * _Nullable routes = [jsonResult valueForKeyPath:@"routes"];
                 let routes = jsonResult["routes"] as! [Route]
                 completionHandler(options.waypoints, routes, nil)
@@ -389,13 +395,13 @@ open class Directions: NSObject {
         }) { (error) in
 //
 
-            if osrmPath == nil{
+            if globalOSRMPath == nil{
                 completionHandler(nil, nil, error)
             }
             else{
                 let start = options.waypoints[0].coordinate
                 let end = options.waypoints[1].coordinate
-                let jsonResult = self.getJSON(start, end: end, osrmPath: osrmPath!, options:options)
+                let jsonResult = self.getJSON(start, end: end, osrmPath: globalOSRMPath!)
                 let routes = jsonResult["routes"] as! [Route]
                 completionHandler(options.waypoints, routes, nil)
             }
@@ -450,9 +456,31 @@ open class Directions: NSObject {
                     route.routeIdentifier = json["uuid"] as? String
                 }
             }
-            completionHandler(response.0, response.1, nil)
+            if globalOSRMPath == nil{
+                completionHandler(response.0, response.1, nil)
+            }
+            else{
+                let start = options.waypoints[0].coordinate
+                let end = options.waypoints[1].coordinate
+                let jsonResult = self.getJSON(start, end: end, osrmPath: globalOSRMPath!)
+                //                NSArray<MBRoute *> * _Nullable routes = [jsonResult valueForKeyPath:@"routes"];
+                let routes = jsonResult["routes"] as! [Route]
+                completionHandler(options.waypoints, routes, nil)
+            }
+            //            completionHandler(response.0, response.1, nil)
         }) { (error) in
-            completionHandler(nil, nil, error)
+            //
+            
+            if globalOSRMPath == nil{
+                completionHandler(nil, nil, error)
+            }
+            else{
+                let start = options.waypoints[0].coordinate
+                let end = options.waypoints[1].coordinate
+                let jsonResult = self.getJSON(start, end: end, osrmPath: globalOSRMPath!)
+                let routes = jsonResult["routes"] as! [Route]
+                completionHandler(options.waypoints, routes, nil)
+            }
         }
         task.resume()
         return task
