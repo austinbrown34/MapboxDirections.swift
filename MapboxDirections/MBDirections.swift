@@ -252,6 +252,36 @@ open class Directions: NSObject {
      }
      */
 //    @objc (getJSON:start)
+    @discardableResult open func getJSONString (jsonResult: Dictionary<String, Any>) -> String{
+//        NSError *error;
+//        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonResult
+//            options:NSJSONWritingPrettyPrinted error:&error];
+//        NSString *jsonString = [[NSString alloc] initWithData:jsonData
+//            encoding:NSUTF8StringEncoding];
+//        NSLog(@"Response JSON=%@", jsonString);
+//        var error = Error?()
+//        var error = NSError(domain:"", code:httpResponse.statusCode, userInfo:nil)
+//        if let jsonResult = jsonResult as? [String: Any] {
+//            print(jsonResult["team1"])
+//        }
+        var JSONString = "{}"
+        do{
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonResult, options: JSONSerialization.WritingOptions.prettyPrinted)
+            let jsonString = String.init(data: jsonData, encoding: String.Encoding.utf8)
+            JSONString = jsonString!
+        }
+        catch {
+            print(error.localizedDescription)
+        }
+        return JSONString
+        
+//        var err: NSError?
+//        let _:NSData! = JSONSerialization.dataWithJSONObject(jsonResult,
+//                                                                    options:JSONSerialization.WritingOptions.PrettyPrinted)
+        
+        
+    }
+    
     @discardableResult open func getWaypoints(location: CLLocationCoordinate2D, osrmPath: String) -> Dictionary<String, Any>{
         let nearestService = NearestService.init(mapData: osrmPath)
         let jsonResult = nearestService?.getWaypointsFrom(location)
@@ -396,9 +426,39 @@ open class Directions: NSObject {
                 let start = options.waypoints[0].coordinate
                 let end = options.waypoints[1].coordinate
                 let jsonResult = self.getJSON(start, end: end, osrmPath: globalOSRMPath!)
+                
+//                let JSONString = self.getJSONString(jsonResult: jsonResult)
+                var json: JSONDictionary = [:]
+                
+//                    do {
+////                        json = try JSONSerialization.jsonObject(with: , options: []) as! JSONDictionary
+//                        json = try JSONSerialization.jsonObject(with: JSONString, options: <#T##JSONSerialization.ReadingOptions#>)
+//                    } catch {
+//                        assert(false, "Invalid data")
+//                    }
+                do{
+                    let jsonData = try JSONSerialization.data(withJSONObject: jsonResult, options: JSONSerialization.WritingOptions.prettyPrinted)
+                    json = try JSONSerialization.jsonObject(with: jsonData, options: []) as! JSONDictionary
+                    let internalResponse = options.response(from: json)
+                    if let routes = internalResponse.1 {
+                        for route in routes {
+                            route.accessToken = self.accessToken
+                            route.apiEndpoint = self.apiEndpoint
+                            route.routeIdentifier = json["uuid"] as? String
+                        }
+                    }
+                    completionHandler(internalResponse.0, internalResponse.1, nil)
+                    
+                }
+                catch {
+                    print(error.localizedDescription)
+                    completionHandler(nil, nil, nil)
+                }
+            
+                
 //                NSArray<MBRoute *> * _Nullable routes = [jsonResult valueForKeyPath:@"routes"];
-                let routes = jsonResult["routes"] as! [Route]
-                completionHandler(options.waypoints, routes, nil)
+//                let routes = jsonResult["routes"] as! [Route]
+//                completionHandler(options.waypoints, routes, nil)
             }
 //            completionHandler(response.0, response.1, nil)
         }) { (error) in
