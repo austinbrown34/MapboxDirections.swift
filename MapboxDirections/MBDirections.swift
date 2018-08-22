@@ -340,6 +340,7 @@ open class Directions: NSObject {
                     var maneuver = newstep["maneuver"] as! Dictionary<String, Any>
                     maneuver["instruction"] = instruction
                     maneuver["type"] = "depart"
+                    newstep["maneuver"] = maneuver
                     
                     newstep["voiceInstructions"] = voiceInstructions
                     newsteps.append(newstep)
