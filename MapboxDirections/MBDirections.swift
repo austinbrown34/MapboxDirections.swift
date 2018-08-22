@@ -336,6 +336,11 @@ open class Directions: NSObject {
                     voiceObject["ssmlAnnouncement"] = msg
                     voiceInstructions.append(voiceObject)
                     var newstep = step
+                    newstep["driving_side"] = "right"
+                    var maneuver = newstep["maneuver"] as! Dictionary<String, Any>
+                    maneuver["instruction"] = instruction
+                    maneuver["type"] = "depart"
+                    
                     newstep["voiceInstructions"] = voiceInstructions
                     newsteps.append(newstep)
 
