@@ -389,7 +389,7 @@ open class Directions: NSObject {
 //            [route setValue:newlegs forKeyPath:@"legs"];
 //            [newroutes addObject:route];
 //        }
-        print(newjsonResult as Any)
+//        print(newjsonResult as Any)
         return newjsonResult!
     }
     /**
@@ -427,7 +427,8 @@ open class Directions: NSObject {
                 let end = options.waypoints[1].coordinate
                 let jsonResult = self.getJSON(start, end: end, osrmPath: globalOSRMPath!)
                 
-//                let JSONString = self.getJSONString(jsonResult: jsonResult)
+                let JSONString = self.getJSONString(jsonResult: jsonResult)
+                print(JSONString)
                 var json: JSONDictionary = [:]
                 
 //                    do {
@@ -447,6 +448,10 @@ open class Directions: NSObject {
                             route.routeIdentifier = json["uuid"] as? String
                         }
                     }
+                    print("internalResponse0:")
+                    print(internalResponse.0)
+                    print("internalResponse1:")
+                    print(internalResponse.1)
                     completionHandler(internalResponse.0, internalResponse.1, nil)
                     
                 }
