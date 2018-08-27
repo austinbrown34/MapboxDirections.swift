@@ -317,6 +317,11 @@ open class Directions: NSObject {
                 for step in leg["steps"] as! [Dictionary<String, Any>]{
                     var voiceInstructions = [Dictionary<String, Any>]()
                     var voiceObject = Dictionary<String, Any>()
+                    var bannerInstructions = [Dictionary<String, Any>]()
+                    var bannerObject = Dictionary<String, Any>()
+                    var primary = Dictionary<String, Any>()
+                    var components = [Dictionary<String, Any>]()
+                    var component = Dictionary<String, Any>()
                     //                    let osrminstructionFormatter = OSRMInstructionFormatter.ini
                     let dis = step["distance"]
 //                    OSRMInstructionFormatter *osrminstructionFormatter = [[OSRMInstructionFormatter alloc] initWithVersion:@"v5"];
@@ -335,13 +340,46 @@ open class Directions: NSObject {
                     voiceObject["announcement"] = instruction
                     voiceObject["ssmlAnnouncement"] = msg
                     voiceInstructions.append(voiceObject)
+//                    "bannerInstructions": [
+//                    {
+//                    "distanceAlongGeometry": 296,
+//                    "primary": {
+//                    "text": "Cardiff Road",
+//                    "components": [
+//                    {
+//                    "text": "Cardiff Road",
+//                    "type": "text",
+//                    "abbr": "Cardiff Rd",
+//                    "abbr_priority": 0
+//                    }
+//                    ],
+//                    "type": "turn",
+//                    "modifier": "left"
+//                    },
+//                    "secondary": null
+//                    }
+//                    ]
+//                },
+                    component["text"] = step["name"]
+                    component["type"] = "text"
+                    component["abbr"] = step["name"]
+                    component["abbr_priority"] = 0
+                    components.append(component)
+                    primary["text"] = step["name"]
+                    primary["components"] = components
+                    primary["type"] = "turn"
+                    primary["modifier"] = "left"
+                    bannerObject["distanceAlongGeometry"] = dis
+                    bannerObject["primary"] = primary
+                    bannerObject["secondary"] = nil
+                    bannerInstructions.append(bannerObject)
                     var newstep = step
                     newstep["driving_side"] = "right"
                     var maneuver = newstep["maneuver"] as! Dictionary<String, Any>
                     maneuver["instruction"] = instruction
                     maneuver["type"] = "depart"
                     newstep["maneuver"] = maneuver
-                    
+                    newstep["bannerInstructions"] = bannerInstructions
                     newstep["voiceInstructions"] = voiceInstructions
                     newsteps.append(newstep)
 
