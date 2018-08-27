@@ -411,8 +411,14 @@ open class Directions: NSObject {
      */
     @objc(calculateDirectionsWithOptions:osrmPath:completionHandler:)
     @discardableResult open func calculate(_ options: RouteOptions, osrmPath: String? = nil, completionHandler: @escaping RouteCompletionHandler) -> URLSessionDataTask {
-        globalOSRMPath = osrmPath
-        globalOptions = options
+        if globalOptions == nil{
+            globalOptions = options
+        }
+        if globalOSRMPath == nil{
+            globalOSRMPath = osrmPath
+        }
+        
+        
         let url = self.url(forCalculating: options)
         print("calculateDirections:")
         print(url)
