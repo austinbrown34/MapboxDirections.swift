@@ -360,6 +360,11 @@ open class Directions: NSObject {
 //                    }
 //                    ]
 //                },
+                    
+                    var newstep = step
+//                    newstep["driving_side"] = "right"
+                    var maneuver = newstep["maneuver"] as! Dictionary<String, Any>
+                    maneuver["instruction"] = instruction
                     component["text"] = step["name"]
                     component["type"] = "text"
                     component["abbr"] = step["name"]
@@ -367,17 +372,13 @@ open class Directions: NSObject {
                     components.append(component)
                     primary["text"] = step["name"]
                     primary["components"] = components
-                    primary["type"] = "turn"
-                    primary["modifier"] = "left"
+                    primary["type"] = maneuver["type"]
+                    primary["modifier"] = maneuver["modifier"]
                     bannerObject["distanceAlongGeometry"] = dis
                     bannerObject["primary"] = primary
                     bannerObject["secondary"] = nil
                     bannerInstructions.append(bannerObject)
-                    var newstep = step
-                    newstep["driving_side"] = "right"
-                    var maneuver = newstep["maneuver"] as! Dictionary<String, Any>
-                    maneuver["instruction"] = instruction
-                    maneuver["type"] = "depart"
+//                    maneuver["type"] = "depart"
                     newstep["maneuver"] = maneuver
                     newstep["bannerInstructions"] = bannerInstructions
                     newstep["voiceInstructions"] = voiceInstructions
